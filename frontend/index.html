@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Isla Maxi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="estilo.css" />
+  </head>
+  <body>
+    <canvas id="lienzo"></canvas>
+
+    <section id="portada" class="capa">
+      <p class="cinta">MUNDO ABIERTO</p>
+      <h1>ISLA MAXI</h1>
+      <p class="subtitulo">
+        Una isla con ciudad, bosque, montañas y playa.
+        Vos caminás, corrés, nadás y manejás.
+      </p>
+      <ul class="lista-zonas">
+        <li><span class="punto ciudad"></span> Ciudad gris</li>
+        <li><span class="punto bosque"></span> Bosque verde</li>
+        <li><span class="punto montana"></span> Montañas</li>
+        <li><span class="punto playa"></span> Playa y mar</li>
+      </ul>
+      <button id="btn-jugar" type="button">ENTRAR A LA ISLA</button>
+      <button id="btn-ayuda" class="secundario" type="button">Cómo jugar</button>
+    </section>
+
+    <section id="ayuda" class="capa escondida">
+      <div class="panel">
+        <h2>Cómo jugar</h2>
+        <ul>
+          <li><strong>W A S D</strong> o flechas: caminar.</li>
+          <li><strong>Shift</strong>: correr. Como cuando apurás el paso.</li>
+          <li><strong>Espacio</strong>: saltar.</li>
+          <li><strong>E</strong>: hablar, subir al auto, comprar.</li>
+          <li>En el agua nadás solo. En la ciudad hay gente y una tienda.</li>
+        </ul>
+        <button id="btn-cerrar-ayuda" type="button">Entendido</button>
+      </div>
+    </section>
+
+    <section id="hud" class="capa escondida">
+      <header class="hud-arriba">
+        <div class="ficha">
+          <span>Zona</span>
+          <strong id="hud-zona">Ciudad</strong>
+        </div>
+        <div class="ficha">
+          <span>Dinero</span>
+          <strong id="hud-dinero">$ 40</strong>
+        </div>
+        <div class="ficha">
+          <span>Hora</span>
+          <strong id="hud-hora">10:00</strong>
+        </div>
+        <div class="ficha">
+          <span>Clima</span>
+          <strong id="hud-clima">Sol</strong>
+        </div>
+      </header>
+
+      <div id="minimapa-caja">
+        <canvas id="minimapa" width="180" height="180"></canvas>
+        <p>Mapa</p>
+      </div>
+
+      <div id="mision-caja">
+        <span>Misión</span>
+        <strong id="hud-mision">Hablá con Ana en la plaza</strong>
+      </div>
+
+      <p id="aviso" class="aviso"></p>
+      <p id="dialogo" class="dialogo"></p>
+
+      <div class="hud-abajo">
+        <p id="pista-tecla">E: hablar / subir</p>
+        <button id="btn-tienda-cerrar" class="escondida" type="button">Cerrar tienda</button>
+        <button id="btn-salir" class="fantasma" type="button">Salir</button>
+      </div>
+    </section>
+
+    <section id="tienda" class="capa escondida">
+      <div class="panel">
+        <h2>Tienda de la plaza</h2>
+        <p class="subtitulo">Gastás las monedas que ganás en las misiones.</p>
+        <div id="lista-tienda" class="tarjetas"></div>
+        <button id="btn-cerrar-tienda" type="button">Salir de la tienda</button>
+      </div>
+    </section>
+
+    <div id="toques" class="toques">
+      <div class="pad">
+        <button data-dir="arriba" type="button">▲</button>
+        <div class="fila">
+          <button data-dir="izq" type="button">◀</button>
+          <button data-dir="der" type="button">▶</button>
+        </div>
+        <button data-dir="abajo" type="button">▼</button>
+      </div>
+      <div class="pad-derecha">
+        <button id="btn-correr" type="button">CORRER</button>
+        <button id="btn-saltar" type="button">SALTAR</button>
+        <button id="btn-usar" type="button">E</button>
+      </div>
+    </div>
+
+    <script src="lib/three.min.js"></script>
+    <script src="mundo.js"></script>
+    <script src="jugador.js"></script>
+    <script src="vehiculos.js"></script>
+    <script src="npcs.js"></script>
+    <script src="misiones.js"></script>
+    <script src="clima.js"></script>
+    <script src="minimapa.js"></script>
+    <script src="tienda.js"></script>
+    <script src="juego.js"></script>
+  </body>
+</html>

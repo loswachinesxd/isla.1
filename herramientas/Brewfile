@@ -1,0 +1,4 @@
+# Programas de la Mac de Maxi (Homebrew).
+# El adulto corre: brew bundle --file=herramientas/Brewfile
+brew "git"
+brew "python@3"

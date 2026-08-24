@@ -1,0 +1,2 @@
+# Paquetes de este juego (la lista del supermercado).
+# Hoy usa solo Python, sin extras.
