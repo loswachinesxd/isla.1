@@ -1,0 +1,26 @@
+---
+description: Estándar de Isla Maxi. Archivos cortos, reutilizar, sin frameworks de más.
+alwaysApply: true
+---
+
+# Cómo se programa Isla Maxi
+
+Maxi tiene 10 años y es su primer proyecto. Unicornio acá es **orden y reuso**, no React ni microservicios.
+
+## Límites (no negociables)
+
+- Ningún archivo **nuestro** supera **150 líneas** (`wc -l`). Excepción única: `frontend/lib/three.min.js`.
+- Un archivo = un trabajo. Si hace dos cosas, se parte **antes** de seguir agregando.
+- Antes de una función nueva: buscar si ya existe. La segunda copia se extrae a un helper compartido. No se pega.
+- No agregar React, npm de frontend, TypeScript, Docker ni paquetes nuevos salvo pedido explícito del adulto.
+- Comentarios en español, cortos. Nombres claros en español.
+
+## Antes de escribir
+
+Leer los archivos del tema. Reusar. Si el archivo ya tiene ≥140 líneas, primero extraer, después el feature.
+
+## Prohibido
+
+- Un archivo “dios” (HUD + teclado + misiones + guardado juntos).
+- Inventar un segundo servidor o un bundler “porque es más pro”.
+- Reescribir de cero lo que ya funciona: se parte y se reusa.

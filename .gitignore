@@ -3,3 +3,7 @@ __pycache__/
 *.pyc
 data/
 .DS_Store
+unreal/IslaMaxi/Binaries/
+unreal/IslaMaxi/Intermediate/
+unreal/IslaMaxi/Saved/
+unreal/IslaMaxi/DerivedDataCache/

@@ -51,6 +51,9 @@ function pintarTienda(caja, compras, dinero, onComprar) {
 
 function aplicarCompras(jugador, compras) {
   if (compras.zapatillas) jugador.velocidadCorrer = 18;
-  const gorra = jugador.mesh.userData.partes && jugador.mesh.userData.partes.gorra;
-  if (gorra) gorra.visible = !!compras.gorra;
+  const partes = jugador.mesh.userData.partes;
+  if (partes && partes.gorra) {
+    partes.gorra.visible = !!compras.gorra;
+    if (partes.visera) partes.visera.visible = !!compras.gorra;
+  }
 }

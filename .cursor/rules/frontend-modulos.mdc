@@ -1,0 +1,29 @@
+---
+description: Módulos del frontend (JS/CSS). Un trabajo por archivo, scripts sin bundler.
+globs: frontend/**/*.{js,css,html}
+alwaysApply: false
+---
+
+# Frontend modular (sin npm)
+
+Seguimos con `<script>` en `index.html`, en orden. No hay import/export ni Vite.
+
+## Dónde va cada cosa
+
+- `frontend/piezas/` — helpers reutilizables: distancia, muñeco, texturas, pickups.
+- `frontend/mundo/` — suelo, agua, edificios, árboles (si `mundo.js` no entra en 150).
+- Un archivo de lista de NPCs (datos) separado de `actualizarNPCs`.
+- Misiones: lista en un archivo, objetos 3D reusando `crearPickup` (concha/manzana/flor son el mismo patrón).
+
+## Reuso
+
+```javascript
+// MAL: crearConchas y crearManzanas casi iguales
+// BIEN: crearPickup(escena, puntos, { color, escalaY })
+```
+
+`cerca(a, b, dist)` vive en `piezas/`, no copiada dentro de `juego.js`.
+
+## CSS
+
+`estilo.css` también ≤150 líneas: partir en `estilo-base.css` y `estilo-hud.css` si crece.

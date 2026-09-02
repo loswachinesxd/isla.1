@@ -1,0 +1,15 @@
+---
+description: Backend Python chico. Un servidor, archivos cortos, sin paquetes de más.
+globs: backend/**/*.py
+alwaysApply: false
+---
+
+# Cocina Python
+
+Un solo servidor de producción: `backend/servidor.py` (o partidos ≤150 líneas: `servir_archivos.py` + `cuaderno.py`).
+
+- Python de la stdlib. No Flask/FastAPI salvo pedido del adulto.
+- `requirements.txt` solo si hace falta un paquete de verdad.
+- `herramientas/servidor-rapido.js` es respaldo local de la Mac, no un segundo live.
+- El bind para internet es `0.0.0.0` y `PORT`; en la Mac puede seguir `127.0.0.1`.
+- Memoria de jugadores: no un JSON global que se pisan entre sí (ver plan Railway).

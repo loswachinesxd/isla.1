@@ -17,13 +17,16 @@
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMappingExposure = 1.18;
+  if (renderer.physicallyCorrectLights !== undefined) {
+    renderer.physicallyCorrectLights = true;
+  }
   if ("outputColorSpace" in renderer) {
     renderer.outputColorSpace = THREE.SRGBColorSpace;
   }
 
   const escena = new THREE.Scene();
-  const camara = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 700);
+  const camara = new THREE.PerspectiveCamera(52, window.innerWidth / window.innerHeight, 0.1, 1800);
   const reloj = new THREE.Clock();
 
   const teclas = {};
@@ -45,6 +48,11 @@
   const perro = crearPerro(escena, mundo.puntos.perro);
   const misiones = crearMisiones();
   const conchas = crearConchas(escena, mundo.puntos.conchas);
+  const flores = crearFlores(escena, mundo.puntos.flores);
+  const boya = crearBoya(escena, mundo.puntos.boya);
+  const tesoro = crearTesoro(escena, mundo.puntos.tesoro);
+  const manzanas = crearManzanas(escena, mundo.puntos.manzanas);
+  const gato = crearGato(escena, mundo.puntos.gato);
   const clima = crearClima(escena);
   const marcador = crearMarcador(escena, 0xffd166);
 
@@ -122,6 +130,40 @@
       });
     }
     aplicarCompras(jugador, compras);
+    aplicarRecogidos();
+  }
+
+  function aplicarRecogidos() {
+    const conchaM = misionPorId(misiones, "conchas");
+    conchas.forEach((c, i) => {
+      if (conchaM && (conchaM.hecha || i < (conchaM.juntas || 0))) {
+        c.tomada = true;
+        c.mesh.visible = false;
+      }
+    });
+    const floresM = misionPorId(misiones, "flores");
+    flores.forEach((f, i) => {
+      if (floresM && (floresM.hecha || i < (floresM.juntas || 0))) {
+        f.tomada = true;
+        f.mesh.visible = false;
+      }
+    });
+    const tesoroM = misionPorId(misiones, "tesoro");
+    if (tesoroM && tesoroM.hecha) {
+      tesoro.tomado = true;
+      tesoro.mesh.visible = false;
+    }
+    const boyaM = misionPorId(misiones, "boya");
+    if (boyaM && boyaM.hecha) boya.mesh.visible = false;
+    const manzanaM = misionPorId(misiones, "manzanas");
+    manzanas.forEach((m, i) => {
+      if (manzanaM && (manzanaM.hecha || i < (manzanaM.juntas || 0))) {
+        m.tomada = true;
+        m.mesh.visible = false;
+      }
+    });
+    const gatoM = misionPorId(misiones, "gato");
+    if (gatoM && gatoM.hecha) gato.mesh.visible = false;
   }
 
   function pagar(cantidad, porQue) {
@@ -175,6 +217,13 @@
       const perroM = misionPorId(misiones, "perro");
       const paquete = misionPorId(misiones, "paquete");
       const conchaM = misionPorId(misiones, "conchas");
+      const floresM = misionPorId(misiones, "flores");
+      const tesoroM = misionPorId(misiones, "tesoro");
+      const boyaM = misionPorId(misiones, "boya");
+      const mirador = misionPorId(misiones, "mirador");
+      const manzanaM = misionPorId(misiones, "manzanas");
+      const cartaM = misionPorId(misiones, "carta");
+      const gatoM = misionPorId(misiones, "gato");
 
       if (npc.id === "ana" && perroM && !perroM.hecha) {
         if (perroM.paso === 0) {
@@ -197,6 +246,61 @@
       if (npc.id === "nico" && conchaM && !conchaM.hecha && conchaM.juntas >= 5) {
         completar(conchaM);
         conchaM.texto = "Nico está feliz con las conchas";
+      }
+      if (npc.id === "nico" && boyaM && !boyaM.hecha && boyaM.paso === 0) {
+        boyaM.paso = 1;
+        boyaM.texto = "Nadá hasta la boya roja en el mar";
+        avisar("¡A nadar hacia la boya!");
+      }
+
+      if (npc.id === "kira" && floresM && !floresM.hecha) {
+        if ((floresM.juntas || 0) >= 6) {
+          completar(floresM);
+          floresM.texto = "Kira armó un ramo";
+        } else if (floresM.paso === 0) {
+          floresM.paso = 1;
+          floresM.texto = "Juntá 6 flores rosas en el bosque";
+          avisar("Buscá flores entre los árboles.");
+        }
+      }
+
+      if (npc.id === "omar" && mirador && !mirador.hecha && mirador.paso === 0) {
+        mirador.paso = 1;
+        mirador.texto = "Subí a la cima de las montañas";
+        avisar("La cima está más arriba.");
+      }
+
+      if (npc.id === "lila" && tesoroM && !tesoroM.hecha && tesoroM.paso === 0) {
+        tesoroM.paso = 1;
+        tesoroM.texto = "Buscá el cofre más allá de las sombrillas";
+        avisar("El cofre está en la playa lejana.");
+      }
+
+      if (npc.id === "bela" && manzanaM && !manzanaM.hecha) {
+        if ((manzanaM.juntas || 0) >= 5) {
+          completar(manzanaM);
+          manzanaM.texto = "Bela recuperó las manzanas";
+        } else if (manzanaM.paso === 0) {
+          manzanaM.paso = 1;
+          manzanaM.texto = "Juntá 5 manzanas en el bosque";
+          avisar("Las manzanas están entre los árboles.");
+        }
+      }
+
+      if (npc.id === "caminante1" && cartaM && !cartaM.hecha && cartaM.paso === 0) {
+        cartaM.paso = 1;
+        cartaM.texto = "Llevá la carta a Tito";
+        avisar("Sofi te dio una carta.");
+      }
+      if (npc.id === "caminante2" && cartaM && !cartaM.hecha && cartaM.paso === 1) {
+        completar(cartaM);
+        cartaM.texto = "Tito leyó la carta de Sofi";
+      }
+
+      if (npc.id === "paz" && gatoM && !gatoM.hecha && gatoM.paso === 0) {
+        gatoM.paso = 1;
+        gatoM.texto = "Buscá al gato gris cerca de la plaza";
+        avisar("El gato está por la plaza.");
       }
       guardar();
     }
@@ -265,6 +369,67 @@
       paquete.paso = 2;
       completar(paquete);
       paquete.texto = "El paquete llegó a la montaña";
+    }
+
+    const floresM = misionPorId(misiones, "flores");
+    flores.forEach((f) => {
+      if (f.tomada || !floresM || floresM.hecha) return;
+      if (cerca(pos, f, 1.8)) {
+        f.tomada = true;
+        f.mesh.visible = false;
+        floresM.juntas = (floresM.juntas || 0) + 1;
+        floresM.paso = Math.max(floresM.paso, 1);
+        floresM.texto = "Flores " + floresM.juntas + "/6. Lleváselas a Kira";
+        avisar("Flor " + floresM.juntas + " de 6");
+        guardar();
+      }
+    });
+
+    const tesoroM = misionPorId(misiones, "tesoro");
+    if (tesoroM && !tesoroM.hecha && !tesoro.tomado && cerca(pos, tesoro, 2.4)) {
+      tesoro.tomado = true;
+      tesoro.mesh.visible = false;
+      tesoroM.paso = 2;
+      completar(tesoroM);
+      tesoroM.texto = "Abriste el cofre de la playa";
+    }
+
+    const boyaM = misionPorId(misiones, "boya");
+    if (boyaM && !boyaM.hecha && cerca(pos, boya, 3.5)) {
+      boyaM.paso = 2;
+      boya.mesh.visible = false;
+      completar(boyaM);
+      boyaM.texto = "Llegaste a la boya";
+    }
+
+    const mirador = misionPorId(misiones, "mirador");
+    if (mirador && !mirador.hecha && cerca(pos, mundo.puntos.mirador, 8)) {
+      mirador.paso = 2;
+      completar(mirador);
+      mirador.texto = "Viste toda la isla desde la cima";
+    }
+
+    const manzanaM = misionPorId(misiones, "manzanas");
+    manzanas.forEach((m) => {
+      if (m.tomada || !manzanaM || manzanaM.hecha) return;
+      if (cerca(pos, m, 1.8)) {
+        m.tomada = true;
+        m.mesh.visible = false;
+        manzanaM.juntas = (manzanaM.juntas || 0) + 1;
+        manzanaM.paso = Math.max(manzanaM.paso, 1);
+        manzanaM.texto = "Manzanas " + manzanaM.juntas + "/5. Lleváselas a Bela";
+        avisar("Manzana " + manzanaM.juntas + " de 5");
+        guardar();
+      }
+    });
+
+    const gatoM = misionPorId(misiones, "gato");
+    if (gatoM && !gatoM.hecha && !gato.encontrado && cerca(pos, gato, 2.6)) {
+      gato.encontrado = true;
+      gato.mesh.visible = false;
+      gatoM.paso = 2;
+      completar(gatoM);
+      gatoM.texto = "Encontraste al gato de Paz";
     }
   }
 
@@ -364,6 +529,7 @@
 
     actualizarClima(clima, dt, escena, pos);
     actualizarAgua(mundo.agua, reloj.elapsedTime);
+    actualizarNubes(mundo.nubes, dt);
     actualizarNPCs(npcs, dt);
 
     if (modo === "juego") {
