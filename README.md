@@ -66,15 +66,15 @@ El dinero sirve en la **tienda** (edificio amarillo).
 | `jugar.sh` | El botón de encender |
 | `backend/servidor.py` | La cocina: sirve el juego y guarda el cuaderno |
 | `frontend/` | Lo que se ve |
-| `frontend/mundo.js` | El mapa de 4 zonas |
+| `frontend/mundo.js` | Junta el mapa (suelo, casas, árboles) |
 | `frontend/jugador.js` | Correr, saltar y nadar |
 | `frontend/vehiculos.js` | Auto y moto |
 | `frontend/npcs.js` | Vecinos que caminan |
-| `frontend/misiones.js` | Encargos |
+| `frontend/misiones-lista.js` | Encargos |
 | `frontend/clima.js` | Sol, lluvia, día y noche |
 | `frontend/minimapa.js` | El GPS chiquito |
 | `frontend/tienda.js` | Compras |
-| `frontend/juego.js` | El director: junta todo |
+| `frontend/juego.js` | El director: junta las piezas |
 | `.venv` | La caja de útiles de Python (se crea sola) |
 
 ## Sobre Lumen y Nanite

@@ -1,0 +1,131 @@
+/* HUD: fichas, mapa, avisos y botones del celular. */
+.hud-arriba {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  pointer-events: none;
+}
+.ficha {
+  background: rgba(16, 32, 51, 0.72);
+  color: #fff;
+  border-radius: 14px;
+  padding: 8px 12px;
+  min-width: 90px;
+}
+.ficha span {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+.ficha strong { font-size: 18px; }
+#minimapa-caja {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(16, 32, 51, 0.72);
+  border-radius: 18px;
+  padding: 8px;
+  text-align: center;
+  color: #fff;
+  pointer-events: none;
+}
+#minimapa-caja p {
+  margin: 4px 0 0;
+  font-size: 12px;
+}
+#minimapa {
+  display: block;
+  border-radius: 12px;
+  background: #1a2433;
+}
+#mision-caja {
+  position: absolute;
+  top: 210px;
+  right: 16px;
+  width: 196px;
+  background: rgba(16, 32, 51, 0.72);
+  color: #fff;
+  border-radius: 16px;
+  padding: 10px 12px;
+  pointer-events: none;
+}
+#mision-caja span {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+.aviso,
+.dialogo {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: min(640px, 90vw);
+  text-align: center;
+  padding: 10px 16px;
+  border-radius: 14px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+.aviso {
+  bottom: 92px;
+  background: rgba(255, 183, 3, 0.92);
+  font-weight: 800;
+}
+.dialogo {
+  bottom: 140px;
+  background: rgba(255, 248, 238, 0.95);
+}
+.aviso.visible,
+.dialogo.visible { opacity: 1; }
+.hud-abajo {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  pointer-events: auto;
+}
+#pista-tecla {
+  margin: 0;
+  background: rgba(16, 32, 51, 0.72);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 12px;
+}
+.toques {
+  display: none;
+  position: fixed;
+  inset: auto 12px 12px 12px;
+  justify-content: space-between;
+  pointer-events: none;
+  z-index: 5;
+}
+.pad,
+.pad-derecha {
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.pad button,
+.pad-derecha button {
+  width: 58px;
+  height: 46px;
+  padding: 0;
+  font-size: 14px;
+}
+.pad .fila {
+  display: flex;
+  gap: 6px;
+}
+@media (pointer: coarse) {
+  .toques { display: flex; }
+}

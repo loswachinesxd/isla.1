@@ -24,3 +24,19 @@ function ocultarPickups(lista, juntas, hecha) {
     }
   });
 }
+
+function recogerLista(lista, mision, max, nombre) {
+  if (!mision || mision.hecha) return;
+  const pos = JUEGO.jugador.mesh.position;
+  lista.forEach((item) => {
+    if (item.tomada || !cerca(pos, item, 1.8)) return;
+    item.tomada = true;
+    item.mesh.visible = false;
+    mision.juntas = (mision.juntas || 0) + 1;
+    mision.paso = Math.max(mision.paso, 1);
+    mision.texto = nombre + " " + mision.juntas + "/" + max + ". Lleváselas";
+    avisar(nombre + " " + mision.juntas + " de " + max);
+    guardar();
+  });
+}
+

@@ -7,6 +7,7 @@ y guarda el CUADERNO (dinero, misiones, compras).
 
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from urllib.parse import unquote
 import json
 import os
 
@@ -76,7 +77,7 @@ class Cocina(BaseHTTPRequestHandler):
         )
 
     def do_GET(self):
-        camino = self.path.split("?", 1)[0]
+        camino = unquote(self.path.split("?", 1)[0])
         if camino == "/api/cuaderno":
             self._enviar_json(200, leer_cuaderno())
             return
