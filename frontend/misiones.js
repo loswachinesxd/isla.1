@@ -122,16 +122,11 @@ function crearMarcador(escena, color) {
 }
 
 function crearConchas(escena, puntos) {
-  return puntos.map((p) => {
-    const mesh = new THREE.Mesh(
-      new THREE.SphereGeometry(0.28, 8, 6),
-      new THREE.MeshStandardMaterial({ color: 0xffe0c2, roughness: 0.4 })
-    );
-    mesh.scale.set(1, 0.45, 1);
-    mesh.position.set(p.x, alturaEn(p.x, p.z) + 0.2, p.z);
-    escena.add(mesh);
-    return { mesh, tomada: false, x: p.x, z: p.z };
-  });
+  return crearPickup(escena, puntos, { color: 0xffe0c2, r: 0.28, escalaY: 0.45, y: 0.2 });
+}
+
+function crearManzanas(escena, puntos) {
+  return crearPickup(escena, puntos, { color: 0xe63946 });
 }
 
 function crearFlores(escena, puntos) {
@@ -204,18 +199,6 @@ function crearTesoro(escena, punto) {
   g.position.set(punto.x, alturaEn(punto.x, punto.z), punto.z);
   escena.add(g);
   return { mesh: g, tomado: false, x: punto.x, z: punto.z };
-}
-
-function crearManzanas(escena, puntos) {
-  return puntos.map((p) => {
-    const mesh = new THREE.Mesh(
-      new THREE.SphereGeometry(0.22, 8, 6),
-      new THREE.MeshStandardMaterial({ color: 0xe63946, roughness: 0.45 })
-    );
-    mesh.position.set(p.x, alturaEn(p.x, p.z) + 0.22, p.z);
-    escena.add(mesh);
-    return { mesh, tomada: false, x: p.x, z: p.z };
-  });
 }
 
 function crearGato(escena, punto) {

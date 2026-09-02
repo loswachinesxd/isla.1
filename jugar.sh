@@ -45,7 +45,7 @@ encender_python() {
   if [[ -f requirements.txt ]]; then
     pip install -q -r requirements.txt
   fi
-  verde "Isla Maxi lista (Python). Abre:  http://127.0.0.1:5005"
+  verde "isla.1 lista (Python). Abre:  http://127.0.0.1:5005"
   echo "Para apagar: Control + C"
   echo
   exec python backend/servidor.py
@@ -53,7 +53,7 @@ encender_python() {
 
 encender_node() {
   local NODE="$1"
-  verde "Python todavía no está. Encendiendo Isla Maxi con el motor de Cursor..."
+  verde "Python todavía no está. Encendiendo isla.1 con el motor de Cursor..."
   echo "Abre:  http://127.0.0.1:5005"
   echo "Para apagar: Control + C"
   echo

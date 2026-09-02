@@ -1,47 +1,25 @@
 /*
-  La tienda.
-
-  Maxi: acá cambiás monedas por cosas.
-  Es como un kiosco: ves el precio y comprás si te alcanza.
+  Pintar góndola y aplicar lo comprado.
 */
-
-const ARTICULOS = [
-  {
-    id: "zapatillas",
-    nombre: "Zapatillas rápidas",
-    detalle: "Corrés más. Como tener el viento a favor.",
-    precio: 50,
-  },
-  {
-    id: "gorra",
-    nombre: "Gorra de la isla",
-    detalle: "Se ve en tu cabeza. Solo para lucirte.",
-    precio: 25,
-  },
-  {
-    id: "snack",
-    nombre: "Jugo de mango",
-    detalle: "No hace nada raro. Está rico igual.",
-    precio: 8,
-  },
-];
-
-function pintarTienda(caja, compras, dinero, onComprar) {
+function pintarTienda(caja, compras, dinero, onComprar, catalogoId) {
   caja.innerHTML = "";
-  ARTICULOS.forEach((item) => {
+  const lista = CATALOGOS[catalogoId] || CATALOGOS.kiosco;
+  lista.forEach((item) => {
     const tarjeta = document.createElement("div");
     tarjeta.className = "tarjeta";
     const ya = compras[item.id];
     const texto = document.createElement("div");
-    texto.innerHTML = `<strong>${item.nombre}</strong><br/><span>${item.detalle}</span>`;
+    texto.innerHTML = "<strong>" + item.nombre + "</strong><br/><span>" + item.detalle + "</span>";
     const boton = document.createElement("button");
     boton.type = "button";
-    if (ya && item.id !== "snack") {
+    if (ya && !item.repetible) {
       boton.textContent = "Ya lo tenés";
       boton.disabled = true;
     } else {
       boton.textContent = "$ " + item.precio;
-      boton.addEventListener("click", () => onComprar(item));
+      boton.addEventListener("click", function () {
+        onComprar(item);
+      });
     }
     tarjeta.appendChild(texto);
     tarjeta.appendChild(boton);
@@ -49,11 +27,32 @@ function pintarTienda(caja, compras, dinero, onComprar) {
   });
 }
 
+function asegurarMochila(jugador) {
+  const partes = jugador.mesh.userData.partes;
+  if (!partes || partes.mochila) return;
+  const mochila = new THREE.Mesh(
+    new THREE.BoxGeometry(0.38, 0.48, 0.22),
+    new THREE.MeshStandardMaterial({ color: 0x386641, roughness: 0.7 })
+  );
+  mochila.position.set(0, 1.28, -0.32);
+  jugador.mesh.add(mochila);
+  partes.mochila = mochila;
+}
+
 function aplicarCompras(jugador, compras) {
-  if (compras.zapatillas) jugador.velocidadCorrer = 18;
+  jugador.velocidadCorrer = compras.zapatillas ? 18 : 13;
+  jugador.velocidadNadar = compras.tabla ? 6.2 : 4.2;
+  jugador.salto = compras.botas ? 10.2 : 8.5;
   const partes = jugador.mesh.userData.partes;
   if (partes && partes.gorra) {
     partes.gorra.visible = !!compras.gorra;
     if (partes.visera) partes.visera.visible = !!compras.gorra;
+  }
+  if (compras.mochila) {
+    asegurarMochila(jugador);
+    const p = jugador.mesh.userData.partes;
+    if (p && p.mochila) p.mochila.visible = true;
+  } else if (partes && partes.mochila) {
+    partes.mochila.visible = false;
   }
 }

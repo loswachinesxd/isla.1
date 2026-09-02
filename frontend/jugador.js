@@ -193,6 +193,8 @@ function crearJugador() {
     nadando: false,
     corriendo: false,
     velocidadCorrer: 13,
+    velocidadNadar: 4.2,
+    salto: 8.5,
     paso: 0,
   };
 }
@@ -234,7 +236,7 @@ function actualizarJugador(jugador, dt, teclas, mundo, toques) {
 
   let vel = 7;
   if (jugador.corriendo) vel = jugador.velocidadCorrer;
-  if (jugador.nadando) vel = 4.2;
+  if (jugador.nadando) vel = jugador.velocidadNadar;
   if (atras) vel *= 0.55;
 
   let dx = 0;
@@ -256,7 +258,7 @@ function actualizarJugador(jugador, dt, teclas, mundo, toques) {
   const gravedad = jugador.nadando ? 6 : 26;
 
   if (saltar && (jugador.enSuelo || jugador.nadando)) {
-    jugador.vy = jugador.nadando ? 4 : 8.5;
+    jugador.vy = jugador.nadando ? 4 : jugador.salto;
     jugador.enSuelo = false;
   }
 

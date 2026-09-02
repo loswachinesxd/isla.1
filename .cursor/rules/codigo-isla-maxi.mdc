@@ -1,9 +1,9 @@
 ---
-description: Estándar de Isla Maxi. Archivos cortos, reutilizar, sin frameworks de más.
+description: Estándar de isla.1. Archivos cortos, reutilizar, sin frameworks de más.
 alwaysApply: true
 ---
 
-# Cómo se programa Isla Maxi
+# Cómo se programa isla.1
 
 Maxi tiene 10 años y es su primer proyecto. Unicornio acá es **orden y reuso**, no React ni microservicios.
 

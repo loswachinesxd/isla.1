@@ -97,7 +97,7 @@ function crearNPCs(escena) {
       pantalon: 0x1d4e4a,
       pelo: 0x4a2c14,
       ojos: 0x2a6f6a,
-      dialogo: "Pasá a la tienda amarilla. Ahí vendo cosas útiles.",
+      dialogo: "Hay cinco tiendas. La mía es la amarilla. Entrá con E.",
       x: -62,
       z: -100,
       puntos: [

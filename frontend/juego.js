@@ -99,21 +99,7 @@
   }
 
   function guardar() {
-    const datos = {
-      dinero,
-      compras,
-      misiones: misiones.map((m) => ({
-        id: m.id,
-        paso: m.paso,
-        hecha: m.hecha,
-        juntas: m.juntas || 0,
-      })),
-    };
-    fetch("/api/cuaderno", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(datos),
-    }).catch(function () {});
+    guardarCuaderno(armarCuaderno(dinero, compras, misiones));
   }
 
   function cargar(datos) {
@@ -135,19 +121,9 @@
 
   function aplicarRecogidos() {
     const conchaM = misionPorId(misiones, "conchas");
-    conchas.forEach((c, i) => {
-      if (conchaM && (conchaM.hecha || i < (conchaM.juntas || 0))) {
-        c.tomada = true;
-        c.mesh.visible = false;
-      }
-    });
+    ocultarPickups(conchas, conchaM && conchaM.juntas, conchaM && conchaM.hecha);
     const floresM = misionPorId(misiones, "flores");
-    flores.forEach((f, i) => {
-      if (floresM && (floresM.hecha || i < (floresM.juntas || 0))) {
-        f.tomada = true;
-        f.mesh.visible = false;
-      }
-    });
+    ocultarPickups(flores, floresM && floresM.juntas, floresM && floresM.hecha);
     const tesoroM = misionPorId(misiones, "tesoro");
     if (tesoroM && tesoroM.hecha) {
       tesoro.tomado = true;
@@ -156,12 +132,7 @@
     const boyaM = misionPorId(misiones, "boya");
     if (boyaM && boyaM.hecha) boya.mesh.visible = false;
     const manzanaM = misionPorId(misiones, "manzanas");
-    manzanas.forEach((m, i) => {
-      if (manzanaM && (manzanaM.hecha || i < (manzanaM.juntas || 0))) {
-        m.tomada = true;
-        m.mesh.visible = false;
-      }
-    });
+    ocultarPickups(manzanas, manzanaM && manzanaM.juntas, manzanaM && manzanaM.hecha);
     const gatoM = misionPorId(misiones, "gato");
     if (gatoM && gatoM.hecha) gato.mesh.visible = false;
   }
@@ -178,9 +149,7 @@
     pagar(mision.recompensa, "Misión lista: " + mision.titulo);
   }
 
-  function cerca(a, b, dist) {
-    return Math.hypot(a.x - b.x, a.z - b.z) < dist;
-  }
+  let tiendaAbierta = null;
 
   function interactuar() {
     if (!document.getElementById("tienda").classList.contains("escondida")) return;
@@ -206,8 +175,9 @@
       return;
     }
 
-    if (cerca(jugador.mesh.position, mundo.puntos.tienda, 6)) {
-      abrirTienda();
+    const shop = tiendaCercana(jugador.mesh.position, 6);
+    if (shop) {
+      abrirTienda(shop);
       return;
     }
 
@@ -306,12 +276,15 @@
     }
   }
 
-  function abrirTienda() {
+  function abrirTienda(shop) {
+    tiendaAbierta = shop;
+    document.getElementById("titulo-tienda").textContent = shop.nombre;
     mostrar("tienda", true);
-    pintarTienda(document.getElementById("lista-tienda"), compras, dinero, comprar);
+    pintarTienda(document.getElementById("lista-tienda"), compras, dinero, comprar, shop.catalogo);
   }
 
   function cerrarTienda() {
+    tiendaAbierta = null;
     mostrar("tienda", false);
   }
 
@@ -320,15 +293,21 @@
       avisar("No te alcanza. Hacé una misión.");
       return;
     }
-    if (compras[item.id] && item.id !== "snack") {
+    if (compras[item.id] && !item.repetible) {
       avisar("Ya lo tenés.");
       return;
     }
     dinero -= item.precio;
-    if (item.id !== "snack") compras[item.id] = true;
+    if (!item.repetible) compras[item.id] = true;
     aplicarCompras(jugador, compras);
     avisar("Compraste: " + item.nombre);
-    pintarTienda(document.getElementById("lista-tienda"), compras, dinero, comprar);
+    pintarTienda(
+      document.getElementById("lista-tienda"),
+      compras,
+      dinero,
+      comprar,
+      tiendaAbierta ? tiendaAbierta.catalogo : "kiosco"
+    );
     guardar();
   }
 
@@ -441,7 +420,7 @@
     hud.mision.textContent = textoMisionActiva(misiones);
     if (vehiculo) hud.pista.textContent = "E: bajar del " + (vehiculo.tipo === "moto" ? "moto" : "auto");
     else if (vehiculoCercano(jugador, vehiculos)) hud.pista.textContent = "E: subir al vehículo";
-    else if (cerca(jugador.mesh.position, mundo.puntos.tienda, 6)) hud.pista.textContent = "E: entrar a la tienda";
+    else if (tiendaCercana(jugador.mesh.position, 6)) hud.pista.textContent = "E: entrar a la tienda";
     else if (npcCercano(jugador, npcs)) hud.pista.textContent = "E: hablar";
     else hud.pista.textContent = "E: hablar / subir";
   }
@@ -451,7 +430,7 @@
     mostrar("portada", false);
     mostrar("ayuda", false);
     mostrar("hud", true);
-    avisar("Bienvenido a Isla Maxi. Hablá con Ana.");
+    avisar("Bienvenido a isla.1. Hablá con Ana.");
   }
 
   document.getElementById("btn-jugar").addEventListener("click", entrar);
@@ -515,12 +494,9 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
 
-  fetch("/api/cuaderno")
-    .then(function (r) {
-      return r.json();
-    })
-    .then(cargar)
-    .catch(function () {});
+  const local = leerCuadernoLocal();
+  if (local) cargar(local);
+  else pedirCuadernoServidor(cargar);
 
   function tick() {
     requestAnimationFrame(tick);

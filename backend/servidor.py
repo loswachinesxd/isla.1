@@ -8,6 +8,7 @@ y guarda el CUADERNO (dinero, misiones, compras).
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 import json
+import os
 
 CARPETA_BACKEND = Path(__file__).resolve().parent
 CARPETA_PROYECTO = CARPETA_BACKEND.parent
@@ -15,8 +16,9 @@ CARPETA_FRONTEND = CARPETA_PROYECTO / "frontend"
 CARPETA_DATOS = CARPETA_PROYECTO / "data"
 ARCHIVO_CUADERNO = CARPETA_DATOS / "cuaderno.json"
 
-# Cada juego usa un puerto distinto, como canales de tele.
-PUERTO = 5005
+# En la Mac: 5005. En Railway: el puerto que te dan.
+PUERTO = int(os.environ.get("PORT", "5005"))
+HOST = "0.0.0.0" if os.environ.get("PORT") else "127.0.0.1"
 
 TIPOS = {
     ".html": "text/html; charset=utf-8",
@@ -117,7 +119,7 @@ class Cocina(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    servidor = ThreadingHTTPServer(("127.0.0.1", PUERTO), Cocina)
-    print("Isla Maxi lista. Abre: http://127.0.0.1:5005")
+    servidor = ThreadingHTTPServer((HOST, PUERTO), Cocina)
+    print("isla.1 lista. Abre: http://" + HOST + ":" + str(PUERTO))
     print("Para apagarlo: presiona Control + C en esta ventana.")
     servidor.serve_forever()

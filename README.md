@@ -1,4 +1,4 @@
-# Isla Maxi (mundo abierto)
+# isla.1
 
 Un mapa grande con **ciudad**, **bosque**, **montañas** y **playa**.
 Caminás en tercera persona: la cámara va detrás de vos, como si
@@ -22,6 +22,16 @@ navegador, para que lo puedas jugar hoy. Igual que Aviones.
 2. Abre [http://127.0.0.1:5005](http://127.0.0.1:5005)
 3. Tocá **ENTRAR A LA ISLA**.
 4. Para apagar: **Control + C** en la Terminal.
+
+## Publicar en Railway (para que jueguen otros)
+
+1. El código está en GitHub: https://github.com/loswachinesxd/isla.1
+2. El adulto entra a https://railway.app con GitHub.
+3. New Project → Deploy from GitHub repo → **isla.1**.
+4. Generate Domain. Sale un link tipo `isla-1.up.railway.app`.
+5. **Republicar:** cada `git push` a `main` vuelve a subir el juego solo.
+
+Cada jugador guarda su progreso en su navegador, no en un cuaderno compartido.
 
 ## Controles
 

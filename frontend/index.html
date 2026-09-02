@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Isla Maxi</title>
+    <title>isla.1</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -17,10 +17,10 @@
 
     <section id="portada" class="capa">
       <p class="cinta">MUNDO ABIERTO</p>
-      <h1>ISLA MAXI</h1>
+      <h1>isla.1</h1>
       <p class="subtitulo">
-        Isla con cielo, árboles y edificios más lindos.
-        Más gente, más misiones. Sin Unreal.
+        Isla.1: árboles, tiendas y mapa más vivos.
+        Entrá a comprar. Sin Unreal.
       </p>
       <ul class="lista-zonas">
         <li><span class="punto ciudad"></span> Ciudad gris</li>
@@ -41,7 +41,7 @@
           <li><strong>Espacio</strong>: saltar.</li>
           <li><strong>E</strong>: hablar, subir al auto, comprar.</li>
           <li>Hay 10 misiones: perro, cima, conchas, paquete, flores, cofre, boya, manzanas, carta y gato.</li>
-          <li>En el agua nadás solo. En la ciudad hay gente y una tienda.</li>
+          <li>Hay 5 tiendas: kiosco, ropa, playa, bosque y montaña. E para entrar y comprar.</li>
         </ul>
         <button id="btn-cerrar-ayuda" type="button">Entendido</button>
       </div>
@@ -89,8 +89,8 @@
 
     <section id="tienda" class="capa escondida">
       <div class="panel">
-        <h2>Tienda de la plaza</h2>
-        <p class="subtitulo">Gastás las monedas que ganás en las misiones.</p>
+        <h2 id="titulo-tienda">Tienda</h2>
+        <p class="subtitulo">Entrá con E. Gastás las monedas de las misiones.</p>
         <div id="lista-tienda" class="tarjetas"></div>
         <button id="btn-cerrar-tienda" type="button">Salir de la tienda</button>
       </div>
@@ -113,6 +113,15 @@
     </div>
 
     <script src="lib/three.min.js"></script>
+    <script src="piezas/distancia.js"></script>
+    <script src="piezas/pickup.js"></script>
+    <script src="piezas/cuaderno.js"></script>
+    <script src="mundo-base.js"></script>
+    <script src="mundo-edificios.js"></script>
+    <script src="mundo-plantas.js"></script>
+    <script src="mundo-datos.js"></script>
+    <script src="mundo-suelo.js"></script>
+    <script src="tienda-datos.js"></script>
     <script src="mundo.js"></script>
     <script src="jugador.js"></script>
     <script src="vehiculos.js"></script>

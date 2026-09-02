@@ -102,6 +102,6 @@ const servidor = http.createServer(async (req, res) => {
 });
 
 servidor.listen(PUERTO, "127.0.0.1", () => {
-  console.log("Isla Maxi lista. Abre: http://127.0.0.1:5005");
+  console.log("isla.1 lista. Abre: http://127.0.0.1:5005");
   console.log("Para apagarlo: presiona Control + C en esta ventana.");
 });
