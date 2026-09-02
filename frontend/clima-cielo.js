@@ -5,15 +5,16 @@ function crearClima(escena) {
   const hemi = new THREE.HemisphereLight(0xb8d8ff, 0x3d2b1f, 0.85);
   const sol = new THREE.DirectionalLight(0xfff1c8, 1.55);
   sol.castShadow = true;
-  sol.shadow.mapSize.set(1536, 1536);
+  const mapaSombra = esMovil() ? 512 : 1536;
+  sol.shadow.mapSize.set(mapaSombra, mapaSombra);
   sol.shadow.bias = -0.00035;
   sol.shadow.normalBias = 0.04;
-  sol.shadow.camera.left = -180;
-  sol.shadow.camera.right = 180;
-  sol.shadow.camera.top = 180;
-  sol.shadow.camera.bottom = -180;
+  sol.shadow.camera.left = -260;
+  sol.shadow.camera.right = 260;
+  sol.shadow.camera.top = 260;
+  sol.shadow.camera.bottom = -260;
   sol.shadow.camera.near = 1;
-  sol.shadow.camera.far = 520;
+  sol.shadow.camera.far = 720;
   escena.add(hemi, sol, sol.target);
   const solMesh = new THREE.Mesh(new THREE.SphereGeometry(7, 16, 12), new THREE.MeshBasicMaterial({ color: 0xffe566 }));
   const brillo = new THREE.Mesh(

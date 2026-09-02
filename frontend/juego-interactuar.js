@@ -5,6 +5,13 @@ function interactuar() {
   if (!document.getElementById("tienda").classList.contains("escondida")) return;
   const G = JUEGO;
   if (G.vehiculo) {
+    const npc = npcCercaDe(G.vehiculo.mesh.position, G.npcs, 4.8);
+    if (npc && hayAsiento(G.vehiculo)) {
+      subirPasajero(G.vehiculo, npc);
+      avisar(npc.nombre + " se subió. E otra vez para bajar.");
+      return;
+    }
+    bajarPasajeros(G.vehiculo, G.escena);
     G.vehiculo.ocupado = false;
     G.jugador.mesh.visible = true;
     G.jugador.mesh.position.copy(G.vehiculo.mesh.position);
@@ -21,6 +28,10 @@ function interactuar() {
     v.ocupado = true;
     G.jugador.mesh.visible = false;
     avisar(v.tipo === "moto" ? "¡Arriba de la moto!" : "¡Al auto!");
+    return;
+  }
+  if (avionCercano(G.jugador.mesh.position, G.mundo.avion, 7)) {
+    volarEnAvion();
     return;
   }
   const shop = tiendaCercana(G.jugador.mesh.position, 6);

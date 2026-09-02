@@ -2,11 +2,28 @@
   NPCs: gente que camina sola.
 */
 function crearNPCs(escena) {
-  return VECINOS.map((v) => {
-    const mesh = crearMuneco({ ropa: v.ropa, pantalon: v.pantalon, pelo: v.pelo, ojos: v.ojos });
+  const pieles = [0xe8b896, 0xc68642, 0xf1c27d, 0xffdbac, 0x8d5524, 0xd1a37a];
+  return VECINOS.map((v, i) => {
+    const mesh = crearMuneco({
+      ropa: v.ropa,
+      pantalon: v.pantalon,
+      pelo: v.pelo,
+      ojos: v.ojos,
+      piel: pieles[i % pieles.length],
+    });
+    mesh.scale.setScalar(0.9 + ruido(v.x, v.z) * 0.18);
     mesh.position.set(v.x, 0, v.z);
     escena.add(mesh);
-    return Object.assign({}, v, { mesh: mesh, i: 0, espera: 0 });
+    return Object.assign({}, v, {
+      mesh: mesh,
+      i: 0,
+      espera: 0,
+      enVehiculo: null,
+      caido: false,
+      enojado: false,
+      vida: 100,
+      golpeCd: 0,
+    });
   });
 }
 
@@ -30,13 +47,45 @@ function crearPerro(escena, punto) {
 
 function actualizarNPCs(npcs, dt) {
   npcs.forEach((npc) => {
+    if (npc.enVehiculo) {
+      animarMuñeco(npc.mesh, false, dt, false);
+      return;
+    }
+    if (npc.caido) {
+      npc.reviveEn = (npc.reviveEn || 0) - dt;
+      if (npc.reviveEn <= 0) revivirNpc(npc);
+      return;
+    }
+    const pos = npc.mesh.position;
+    if (JUEGO.jugador) {
+      const yo = JUEGO.jugador.mesh.position;
+      const d = pos.distanceTo(yo);
+      const dxm = yo.x - pos.x;
+      const dzm = yo.z - pos.z;
+      if (npc.enojado && d < 16) {
+        const dist = Math.hypot(dxm, dzm) || 1;
+        if (dist > 1.5) {
+          pos.x += (dxm / dist) * 2.4 * dt;
+          pos.z += (dzm / dist) * 2.4 * dt;
+        }
+        pos.y = alturaEn(pos.x, pos.z);
+        npc.mesh.rotation.y = Math.atan2(dxm, dzm);
+        animarMuñeco(npc.mesh, dist > 1.5, dt, false);
+        return;
+      }
+      if (d < 4.2) {
+        npc.mesh.rotation.y = Math.atan2(dxm, dzm);
+        pos.y = alturaEn(pos.x, pos.z);
+        animarMuñeco(npc.mesh, false, dt, false);
+        return;
+      }
+    }
     if (npc.espera > 0) {
       npc.espera -= dt;
       animarMuñeco(npc.mesh, false, dt, false);
       return;
     }
     const destino = npc.puntos[npc.i];
-    const pos = npc.mesh.position;
     const dx = destino.x - pos.x;
     const dz = destino.z - pos.z;
     const dist = Math.hypot(dx, dz);
@@ -54,15 +103,5 @@ function actualizarNPCs(npcs, dt) {
 }
 
 function npcCercano(jugador, npcs) {
-  const p = jugador.mesh.position;
-  let mejor = null;
-  let dMejor = 3.2;
-  npcs.forEach((npc) => {
-    const d = p.distanceTo(npc.mesh.position);
-    if (d < dMejor) {
-      dMejor = d;
-      mejor = npc;
-    }
-  });
-  return mejor;
+  return npcCercaDe(jugador.mesh.position, npcs, 3.2);
 }

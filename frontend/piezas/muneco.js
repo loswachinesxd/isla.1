@@ -46,6 +46,19 @@ function crearMuneco(colores) {
   }
   const nariz = new THREE.Mesh(new THREE.SphereGeometry(0.035, 8, 6), matPiel);
   nariz.position.set(0, 1.88, 0.24);
+  const boca = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.025, 0.03), matStd(0xc45c5c, 0.45));
+  boca.position.set(0, 1.78, 0.23);
+  function oreja(lado) {
+    const o = new THREE.Mesh(new THREE.SphereGeometry(0.055, 6, 5), matPiel);
+    o.position.set(lado * 0.255, 1.93, 0);
+    o.scale.set(0.55, 1.05, 0.7);
+    return o;
+  }
+  function ceja(lado) {
+    const c = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.015, 0.02), matPelo);
+    c.position.set(lado * 0.09, 2.05, 0.2);
+    return c;
+  }
   const gorra = new THREE.Mesh(new THREE.CylinderGeometry(0.29, 0.3, 0.12, 12), matStd(colores.gorra || 0x1d3557, 0.55));
   gorra.position.y = 2.16;
   gorra.visible = !!colores.tieneGorra;
@@ -78,8 +91,19 @@ function crearMuneco(colores) {
   const piernaD = armarPierna(1);
   const brazoI = armarBrazo(-1);
   const brazoD = armarBrazo(1);
-  grupo.add(cadera, torso, hombros, cuello, cabeza, cabello, nariz, gorra, visera, piernaI, piernaD, brazoI, brazoD);
-  ojo(-1).concat(ojo(1)).forEach((o) => grupo.add(o));
-  grupo.userData.partes = { piernaI: piernaI, piernaD: piernaD, brazoI: brazoI, brazoD: brazoD, gorra: gorra, visera: visera, cabeza: cabeza };
+  const ojos = ojo(-1).concat(ojo(1));
+  grupo.add(cadera, torso, hombros, cuello, cabeza, cabello, nariz, boca, gorra, visera, piernaI, piernaD, brazoI, brazoD, oreja(-1), oreja(1), ceja(-1), ceja(1));
+  ojos.forEach((o) => grupo.add(o));
+  grupo.userData.partes = {
+    piernaI: piernaI,
+    piernaD: piernaD,
+    brazoI: brazoI,
+    brazoD: brazoD,
+    gorra: gorra,
+    visera: visera,
+    cabeza: cabeza,
+    torso: torso,
+    ojos: ojos,
+  };
   return grupo;
 }

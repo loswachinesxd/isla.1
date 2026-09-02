@@ -1,10 +1,10 @@
 /*
   El director: cada fotograma mueve el mundo.
 */
-conectarControles();
 const local = leerCuadernoLocal();
 if (local) cargar(local);
 else pedirCuadernoServidor(cargar);
+conectarControles();
 
 function tick() {
   requestAnimationFrame(tick);
@@ -16,19 +16,28 @@ function tick() {
   actualizarNubes(G.mundo.nubes, dt);
   actualizarNPCs(G.npcs, dt);
   if (G.modo === "juego") {
-    const eAhora = !!(G.teclas.KeyE || G.toques.usar);
-    if (eAhora && !G.eAntes) interactuar();
-    G.eAntes = eAhora;
-    G.toques.usar = false;
-    if (G.vehiculo) {
-      actualizarVehiculo(G.vehiculo, dt, G.teclas, G.mundo, G.toques);
-      G.jugador.mesh.position.copy(G.vehiculo.mesh.position);
-      seguirCamara(G.camara, G.vehiculo.mesh.position, G.vehiculo.yaw, 12, dt);
+    const inerte = tickVida(dt);
+    if (!inerte && !G.escribiendo) {
+      const eAhora = !!(G.teclas.KeyE || G.toques.usar);
+      if (eAhora && !G.eAntes) interactuar();
+      G.eAntes = eAhora;
+      G.toques.usar = false;
+      if (G.vehiculo) {
+        actualizarVehiculo(G.vehiculo, dt, G.teclas, G.mundo, G.toques);
+        G.jugador.mesh.position.copy(G.vehiculo.mesh.position);
+        seguirCamara(G.camara, G.vehiculo.mesh.position, G.vehiculo.yaw, 12, dt);
+        revisarAtropello(G.vehiculo, G.npcs);
+      } else {
+        actualizarJugador(G.jugador, dt, G.teclas, G.mundo, G.toques);
+        seguirCamara(G.camara, G.jugador.mesh.position, G.jugador.yaw, 8.5, dt);
+      }
+      tickPelea(dt);
+      revisarMisiones();
     } else {
-      actualizarJugador(G.jugador, dt, G.teclas, G.mundo, G.toques);
-      seguirCamara(G.camara, G.jugador.mesh.position, G.jugador.yaw, 8.5, dt);
+      const obj = G.vehiculo ? G.vehiculo.mesh.position : G.jugador.mesh.position;
+      const yaw = G.vehiculo ? G.vehiculo.yaw : G.jugador.yaw;
+      seguirCamara(G.camara, obj, yaw, G.vehiculo ? 12 : 8.5, dt);
     }
-    revisarMisiones();
     const px = G.vehiculo ? G.vehiculo.mesh.position.x : G.jugador.mesh.position.x;
     const pz = G.vehiculo ? G.vehiculo.mesh.position.z : G.jugador.mesh.position.z;
     const marks = marcadoresDeMision(G.misiones, G.mundo, G.perro);

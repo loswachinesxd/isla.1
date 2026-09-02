@@ -63,6 +63,7 @@ function crearVehiculos(escena, puntos) {
     vel: 0,
     yaw: 0,
     ocupado: false,
+    pasajeros: [],
     maxVel: 22,
   };
   auto.mesh.position.set(puntos.auto.x, alturaEn(puntos.auto.x, puntos.auto.z), puntos.auto.z);
@@ -72,6 +73,7 @@ function crearVehiculos(escena, puntos) {
     vel: 0,
     yaw: 0,
     ocupado: false,
+    pasajeros: [],
     maxVel: 30,
   };
   moto.mesh.position.set(puntos.moto.x, alturaEn(puntos.moto.x, puntos.moto.z), puntos.moto.z);

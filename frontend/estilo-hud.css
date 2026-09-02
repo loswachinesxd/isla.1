@@ -100,32 +100,3 @@
   padding: 10px 14px;
   border-radius: 12px;
 }
-.toques {
-  display: none;
-  position: fixed;
-  inset: auto 12px 12px 12px;
-  justify-content: space-between;
-  pointer-events: none;
-  z-index: 5;
-}
-.pad,
-.pad-derecha {
-  pointer-events: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.pad button,
-.pad-derecha button {
-  width: 58px;
-  height: 46px;
-  padding: 0;
-  font-size: 14px;
-}
-.pad .fila {
-  display: flex;
-  gap: 6px;
-}
-@media (pointer: coarse) {
-  .toques { display: flex; }
-}

@@ -2,26 +2,36 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <title>isla.1</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="estilo-base.css" />
     <link rel="stylesheet" href="estilo-hud.css" />
+    <link rel="stylesheet" href="estilo-movil.css" />
+    <link rel="stylesheet" href="estilo-chat.css" />
   </head>
   <body>
     <canvas id="lienzo"></canvas>
     <section id="portada" class="capa">
       <p class="cinta">MUNDO ABIERTO</p>
       <h1>isla.1</h1>
-      <p class="subtitulo">Isla.1: árboles, tiendas y mapa más vivos. Entrá a comprar. Sin Unreal.</p>
+      <p class="subtitulo">Isla grande: ciudad, nieve, desierto, pantano, aeropuerto y más.</p>
       <ul class="lista-zonas">
         <li><span class="punto ciudad"></span> Ciudad gris</li>
         <li><span class="punto bosque"></span> Bosque verde</li>
         <li><span class="punto montana"></span> Montañas</li>
         <li><span class="punto playa"></span> Playa y mar</li>
+        <li><span class="punto pradera"></span> Pradera</li>
+        <li><span class="punto desierto"></span> Desierto</li>
+        <li><span class="punto nieve"></span> Nieve</li>
+        <li><span class="punto pantano"></span> Pantano</li>
       </ul>
+      <label class="nombre-caja">Tu nombre <input id="nombre-jugador" maxlength="16" value="Maxi" /></label>
+      <label class="nombre-caja">Director (opcional) <input id="clave-admin" type="password" maxlength="24" placeholder="Clave secreta" /></label>
       <button id="btn-jugar" type="button">ENTRAR A LA ISLA</button>
       <button id="btn-ayuda" class="secundario" type="button">Cómo jugar</button>
     </section>
@@ -29,9 +39,10 @@
       <div class="panel">
         <h2>Cómo jugar</h2>
         <ul>
-          <li><strong>W A S D</strong> o flechas: caminar. <strong>Shift</strong>: correr. <strong>Espacio</strong>: saltar.</li>
-          <li><strong>E</strong>: hablar, subir al auto, comprar en 5 tiendas.</li>
-          <li>10 misiones: perro, cima, conchas, paquete, flores, cofre, boya, manzanas, carta y gato.</li>
+          <li><strong>W A S D</strong> o los botones del celular: caminar. <strong>Shift</strong> o CORRER. <strong>Espacio</strong> o SALTAR.</li>
+          <li><strong>E</strong>: hablar, auto, avión y comprar. <strong>F</strong> o PEGAR: boxeo suave.</li>
+          <li><strong>T</strong> o Enter: chat. <strong>/ayuda</strong> lista comandos.</li>
+          <li>Si se acaba la vida, te desmayás. Los vecinos también se desmayan un rato.</li>
         </ul>
         <button id="btn-cerrar-ayuda" type="button">Entendido</button>
       </div>
@@ -42,6 +53,8 @@
         <div class="ficha"><span>Dinero</span><strong id="hud-dinero">$ 40</strong></div>
         <div class="ficha"><span>Hora</span><strong id="hud-hora">10:00</strong></div>
         <div class="ficha"><span>Clima</span><strong id="hud-clima">Sol</strong></div>
+        <div class="ficha ficha-vida"><span>Vida</span><strong id="hud-vida">100 / 100</strong></div>
+        <div class="ficha"><span>Jugador</span><strong id="hud-rol">Maxi</strong></div>
       </header>
       <div id="minimapa-caja">
         <canvas id="minimapa" width="180" height="180"></canvas>
@@ -53,6 +66,13 @@
       </div>
       <p id="aviso" class="aviso"></p>
       <p id="dialogo" class="dialogo"></p>
+      <div id="chat" class="chat">
+        <div id="chat-log"></div>
+        <form id="chat-form">
+          <input id="chat-texto" maxlength="80" placeholder="T: chat. /ayuda" autocomplete="off" />
+          <button type="submit">Enviar</button>
+        </form>
+      </div>
       <div class="hud-abajo">
         <p id="pista-tecla">E: hablar / subir</p>
         <button id="btn-salir" class="fantasma" type="button">Salir</button>
@@ -79,22 +99,31 @@
         <button id="btn-correr" type="button">CORRER</button>
         <button id="btn-saltar" type="button">SALTAR</button>
         <button id="btn-usar" type="button">E</button>
+        <button id="btn-pegar" type="button">PEGAR</button>
+        <button id="btn-chat" type="button">CHAT</button>
       </div>
     </div>
     <script src="lib/three.min.js"></script>
     <script src="piezas/distancia.js"></script>
     <script src="piezas/pickup.js"></script>
     <script src="piezas/cuaderno.js"></script>
+    <script src="piezas/secretos.js"></script>
     <script src="piezas/muneco.js"></script>
     <script src="mundo-base.js"></script>
+    <script src="mundo-biomas.js"></script>
     <script src="mundo-edificios.js"></script>
     <script src="mundo-plantas.js"></script>
+    <script src="mundo-plantas-extra.js"></script>
+    <script src="mundo-bosque.js"></script>
     <script src="mundo-datos.js"></script>
     <script src="mundo-suelo.js"></script>
+    <script src="mundo-aeropuerto.js"></script>
     <script src="tienda-datos.js"></script>
     <script src="mundo.js"></script>
     <script src="jugador.js"></script>
     <script src="vehiculos.js"></script>
+    <script src="vehiculos-asientos.js"></script>
+    <script src="vehiculos-atropello.js"></script>
     <script src="npcs-datos.js"></script>
     <script src="npcs.js"></script>
     <script src="misiones-lista.js"></script>
@@ -106,11 +135,15 @@
     <script src="tienda.js"></script>
     <script src="juego-estado.js"></script>
     <script src="juego-hud.js"></script>
+    <script src="juego-chat.js"></script>
+    <script src="juego-comandos.js"></script>
+    <script src="juego-vida.js"></script>
     <script src="juego-guardar.js"></script>
     <script src="juego-charla.js"></script>
     <script src="juego-interactuar.js"></script>
     <script src="juego-progreso.js"></script>
     <script src="juego-input.js"></script>
+    <script src="juego-pelea.js"></script>
     <script src="juego.js"></script>
   </body>
 </html>

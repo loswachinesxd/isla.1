@@ -28,6 +28,14 @@ function crearJugador() {
 function animarMuñeco(mesh, andando, dt, rapido) {
   const p = mesh.userData.partes;
   if (!p) return;
+  mesh.userData.tIdle = (mesh.userData.tIdle || 0) + dt;
+  if (p.cabeza) p.cabeza.position.y = 1.92 + Math.sin(mesh.userData.tIdle * 2.2) * 0.012;
+  if (p.ojos) {
+    const parpadeo = mesh.userData.tIdle % 4.2 > 4.05;
+    p.ojos.forEach((o) => {
+      o.scale.y = parpadeo ? 0.12 : 1;
+    });
+  }
   if (andando) {
     mesh.userData.t = (mesh.userData.t || 0) + dt * (rapido ? 14 : 9);
     const o = Math.sin(mesh.userData.t);
@@ -79,10 +87,14 @@ function actualizarJugador(jugador, dt, teclas, mundo, toques) {
     jugador.enSuelo = false;
   }
   jugador.vy -= (jugador.nadando ? 6 : 26) * dt;
+  const vyAntes = jugador.vy;
   pos.y += jugador.vy * dt;
   const piso = jugador.nadando ? AGUA_Y + 0.35 : suelo;
   if (pos.y <= piso) {
     pos.y = piso;
+    if (!jugador.nadando && jugador.enSuelo === false && vyAntes < -14) {
+      lastimar(Math.min(55, Math.floor((-vyAntes - 14) * 5)), "Caíste de muy alto.");
+    }
     jugador.vy = 0;
     jugador.enSuelo = !jugador.nadando;
   }

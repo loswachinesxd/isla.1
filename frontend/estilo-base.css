@@ -83,6 +83,10 @@ h1 {
 .punto.bosque { background: #2f9e44; }
 .punto.montana { background: #cfd6de; }
 .punto.playa { background: #f4d35e; }
+.punto.pradera { background: #8bc34a; }
+.punto.desierto { background: #e0c078; }
+.punto.nieve { background: #eef4f8; }
+.punto.pantano { background: #4a5c3a; }
 button {
   font-family: inherit;
   font-weight: 900;

@@ -29,15 +29,23 @@ function pintarHud(zona) {
   const G = JUEGO;
   document.getElementById("hud-zona").textContent = nombreZona(zona);
   document.getElementById("hud-dinero").textContent = "$ " + G.dinero;
+  pintarVida();
+  const dir = document.getElementById("hud-rol");
+  if (dir) dir.textContent = G.esAdmin ? "Director" : G.nombre || "Maxi";
   document.getElementById("hud-hora").textContent = horaTexto(G.clima.hora);
   document.getElementById("hud-clima").textContent = nombreClima(G.clima.tipo);
   document.getElementById("hud-mision").textContent = textoMisionActiva(G.misiones);
   const pista = document.getElementById("pista-tecla");
-  if (G.vehiculo) pista.textContent = "E: bajar del " + (G.vehiculo.tipo === "moto" ? "moto" : "auto");
+  if (G.vehiculo) {
+    const extra = npcCercaDe(G.vehiculo.mesh.position, G.npcs, 4.8);
+    if (extra && hayAsiento(G.vehiculo)) pista.textContent = "E: subir a " + extra.nombre;
+    else pista.textContent = "E: bajar del " + (G.vehiculo.tipo === "moto" ? "moto" : "auto");
+  }
   else if (vehiculoCercano(G.jugador, G.vehiculos)) pista.textContent = "E: subir al vehículo";
+  else if (avionCercano(G.jugador.mesh.position, G.mundo.avion, 8)) pista.textContent = "E: volar en el avión";
   else if (tiendaCercana(G.jugador.mesh.position, 6)) pista.textContent = "E: entrar a la tienda";
-  else if (npcCercano(G.jugador, G.npcs)) pista.textContent = "E: hablar";
-  else pista.textContent = "E: hablar / subir";
+  else if (npcCercano(G.jugador, G.npcs)) pista.textContent = "E: hablar · F: pegar";
+  else pista.textContent = "E: hablar / subir · F: pegar";
 }
 
 function tickAvisos(dt) {

@@ -29,18 +29,8 @@ function crearMundo(escena) {
   fuente.position.set(SPAWN.x, 0.3, SPAWN.z);
   grupo.add(fuente);
 
-  for (let i = 0; i < 110; i += 1) {
-    const x = 22 + (i % 11) * 32 + (i % 4) * 5;
-    const z = -22 - Math.floor(i / 11) * 32 - (i % 3) * 7;
-    if (x > MITAD_MAPA - 16 || z < -MITAD_MAPA + 16) continue;
-    grupo.add(crearArbol(x, z, alturaEn(x, z)));
-  }
-  for (let i = 0; i < 36; i += 1) {
-    const x = -36 - (i % 8) * 40;
-    const z = 48 + Math.floor(i / 8) * 38;
-    if (z > MITAD_MAPA - 20 || x < -MITAD_MAPA + 16) continue;
-    grupo.add(crearRoca(x, z, alturaEn(x, z), 1.2 + (i % 3) * 0.55));
-  }
+  plantarBosque(grupo);
+  const avion = crearAeropuerto(grupo, cajas, puntos);
 
   agregarEdificio(grupo, cajas, crearEdificio(puntos.cabana.x, puntos.cabana.z, 8, 8, 5, 0x8b5a2b));
   const sombrilla = new THREE.Mesh(
@@ -53,11 +43,15 @@ function crearMundo(escena) {
   sombrilla2.material = new THREE.MeshStandardMaterial({ color: 0x4cc9f0 });
   sombrilla2.position.set(210, 3.2, 70);
   grupo.add(sombrilla2);
+  const sombrilla3 = sombrilla.clone();
+  sombrilla3.material = new THREE.MeshStandardMaterial({ color: 0xffd166 });
+  sombrilla3.position.set(150, 3.2, 120);
+  grupo.add(sombrilla3);
 
   const nubes = crearNubes();
   grupo.add(nubes);
   escena.add(grupo);
-  escena.fog = new THREE.FogExp2(0x9fd0ff, 0.002);
+  escena.fog = new THREE.FogExp2(0x9fd0ff, 0.00115);
   puntos.tiendas = TIENDAS;
-  return { grupo, agua, nubes, cajas, puntos, lado: LADO_MAPA };
+  return { grupo, agua, nubes, cajas, puntos, avion, lado: LADO_MAPA };
 }

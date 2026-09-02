@@ -11,27 +11,27 @@ function dibujarMinimapa(canvas, jugador, vehiculo, marcadores) {
   const h = canvas.height;
   ctx.clearRect(0, 0, w, h);
 
-  ctx.fillStyle = "#8b909a";
-  ctx.fillRect(0, h / 2, w / 2, h / 2);
-  ctx.fillStyle = "#3d8c40";
-  ctx.fillRect(w / 2, h / 2, w / 2, h / 2);
-  ctx.fillStyle = "#c5ccd4";
-  ctx.fillRect(0, 0, w / 2, h / 2);
-  ctx.fillStyle = "#e7d089";
-  ctx.fillRect(w / 2, 0, w / 2, h / 2);
-  ctx.fillStyle = "#2a7ec4";
-  ctx.beginPath();
-  ctx.moveTo(w, 0);
-  ctx.lineTo(w, h * 0.28);
-  ctx.lineTo(w * 0.72, 0);
-  ctx.closePath();
-  ctx.fill();
+  const pasos = 28;
+  for (let iy = 0; iy < pasos; iy += 1) {
+    for (let ix = 0; ix < pasos; ix += 1) {
+      const x = (ix / pasos) * LADO_MAPA - MITAD_MAPA;
+      const z = MITAD_MAPA - (iy / pasos) * LADO_MAPA;
+      ctx.fillStyle = colorCssZona(zonaEn(x, z));
+      ctx.fillRect((ix / pasos) * w, (iy / pasos) * h, w / pasos + 1, h / pasos + 1);
+    }
+  }
 
   function mundoAPantalla(x, z) {
     return {
       px: ((x + MITAD_MAPA) / LADO_MAPA) * w,
       py: ((MITAD_MAPA - z) / LADO_MAPA) * h,
     };
+  }
+
+  if (JUEGO.mundo && JUEGO.mundo.puntos.aeropuerto) {
+    const a = mundoAPantalla(JUEGO.mundo.puntos.aeropuerto.x, JUEGO.mundo.puntos.aeropuerto.z);
+    ctx.fillStyle = "#2b2f36";
+    ctx.fillRect(a.px - 2, a.py - 9, 4, 18);
   }
 
   marcadores.forEach((m) => {

@@ -1,10 +1,14 @@
 /*
-  El mapa: pizza en 4 zonas.
+  El tamaño de la isla y el piso con ruidito.
 */
-const LADO_MAPA = 960;
+const LADO_MAPA = 2100;
 const MITAD_MAPA = LADO_MAPA / 2;
 const SPAWN = { x: -90, z: -90 };
 const AGUA_Y = -0.35;
+
+function esMovil() {
+  return window.innerWidth < 820 || (window.matchMedia && window.matchMedia("(pointer: coarse)").matches);
+}
 
 function ruido(ix, iz) {
   const n = Math.sin(ix * 127.1 + iz * 311.7) * 43758.5453;
@@ -24,45 +28,6 @@ function ruidoSuave(x, z) {
     ruido(xi, zi + 1) * (1 - u) * v +
     ruido(xi + 1, zi + 1) * u * v
   );
-}
-
-function zonaEn(x, z) {
-  if (x >= 0 && z >= 0) {
-    if (x > 120 && z > 120 && x + z > 360) return "agua";
-    return "playa";
-  }
-  if (x < 0 && z >= 0) return "montana";
-  if (x >= 0 && z < 0) return "bosque";
-  return "ciudad";
-}
-
-function nombreZona(zona) {
-  const n = { ciudad: "Ciudad", bosque: "Bosque", montana: "Montañas", playa: "Playa", agua: "Mar" };
-  return n[zona] || "Isla";
-}
-
-function esAgua(x, z) {
-  return zonaEn(x, z) === "agua";
-}
-
-function alturaEn(x, z) {
-  const zona = zonaEn(x, z);
-  if (zona === "agua") return AGUA_Y - 0.8;
-  if (zona === "playa") return 0.08 + ruidoSuave(x * 0.04, z * 0.04) * 0.28;
-  if (zona === "ciudad") return 0;
-  if (zona === "bosque") return ruidoSuave(x * 0.028, z * 0.028) * 2.6;
-  return 1.4 + ruidoSuave(x * 0.02, z * 0.02) * 16 + ruidoSuave(x * 0.08, z * 0.08) * 2.5;
-}
-
-function colorZona(zona) {
-  const c = {
-    ciudad: new THREE.Color(0x7d848c),
-    bosque: new THREE.Color(0x2f7a38),
-    montana: new THREE.Color(0xb8c2cc),
-    playa: new THREE.Color(0xe4c97a),
-    agua: new THREE.Color(0x1f6fad),
-  };
-  return c[zona] || c.ciudad;
 }
 
 function chocaCaja(x, z, cajas) {

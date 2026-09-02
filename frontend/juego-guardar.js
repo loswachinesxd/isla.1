@@ -2,7 +2,13 @@
   Guardar y cargar el cuaderno.
 */
 function guardar() {
-  guardarCuaderno(armarCuaderno(JUEGO.dinero, JUEGO.compras, JUEGO.misiones));
+  guardarCuaderno(
+    armarCuaderno(JUEGO.dinero, JUEGO.compras, JUEGO.misiones, {
+      vida: JUEGO.vida,
+      nombre: JUEGO.nombre,
+      secretoEncontrado: JUEGO.secretoEncontrado,
+    })
+  );
 }
 
 function cargar(datos) {
@@ -18,8 +24,15 @@ function cargar(datos) {
       if (typeof guardada.juntas === "number") m.juntas = guardada.juntas;
     });
   }
+  if (typeof datos.vida === "number") JUEGO.vida = datos.vida;
+  if (datos.nombre) JUEGO.nombre = String(datos.nombre).slice(0, 16);
+  if (datos.secretoEncontrado) {
+    JUEGO.secretoEncontrado = true;
+    if (JUEGO.piedraSecreta) JUEGO.piedraSecreta.visible = false;
+  }
   aplicarCompras(JUEGO.jugador, JUEGO.compras);
   aplicarRecogidos();
+  pintarVida();
 }
 
 function aplicarRecogidos() {

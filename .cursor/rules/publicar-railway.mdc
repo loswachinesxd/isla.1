@@ -1,0 +1,28 @@
+---
+description: Si Maxi pide subir el juego al servidor, commit + push a main para que Railway lo publique.
+alwaysApply: true
+---
+
+# Publicar isla.1 (GitHub → Railway)
+
+Maxi (a veces “Manky”) actualiza el juego **en línea** pidiendo subir cambios al servidor.
+
+## Cuándo hacerlo
+
+Si pide, en cualquier tono, cosas como: subí los cambios, actualizá el servidor, publicá, subilo a GitHub/Railway, que se vea online, actualizá el juego en internet.
+
+Eso **autoriza** commit (si hay cambios) y `git push origin main`. No hace falta Docker ni otro servidor.
+
+## Cómo
+
+1. `git status` / `git diff` / `git log -5`.
+2. Si hay cambios: agregar archivos del juego (no `.env` ni secretos), commit corto en español (el “por qué”).
+3. `git push origin main` (nunca `--force` a `main`).
+4. Decirle a Maxi: Railway tarda un minuto y después recarga el link. En la Mac, `./jugar.sh` sigue siendo lo local.
+
+Si ya está todo pusheado, no inventar un commit vacío: avisarle que internet ya tiene esa versión.
+
+## No
+
+- No crear otro backend, ni Docker, ni un segundo deploy “más pro”.
+- No push si GitHub pide login: pedirle al adulto `gh auth login`.
